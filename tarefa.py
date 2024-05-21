@@ -11,6 +11,7 @@ def adicionar_tarefa():
     if tarefa:
         lista_tarefas.insert(0,tarefa)
         nova_tarefa.delete(0,END)
+        salvar_tarefas()
     else: 
         messagebox.showerror('Erro no APP', 'Digite uma tarefa !!')
         
@@ -19,10 +20,28 @@ def remover_tarefa():
     tarefa_selecionada = lista_tarefas.curselection()
     if tarefa_selecionada:
         lista_tarefas.delete(tarefa_selecionada)
+        salvar_tarefas()
     else:
         messagebox.showerror('Erro no App','Selecione uma tarefa!!')   
 
 
+def salvar_tarefas():
+    with open('tarefas.txt','w') as t:
+        tarefas = lista_tarefas.get(0,END)
+        for x in tarefas:
+            t.write(x + '\n')
+
+def carrega_tarefas():
+    try:
+      with open('tarefas.txt' , 'r') as t:
+        tarefas = t.readlines()
+        for x in tarefas:
+            lista_tarefas.insert(0,x.strip())  #strip vai ignorar a linha em branco, o valor em braco não vai pegar
+    except:
+        messagebox.showerror('Erro', 'Não foi possível carregar as tarefas')
+
+
+    
 
 
 #--------------------------------------------
@@ -62,5 +81,5 @@ lista_tarefas = Listbox(janela, width=40, height= 15)
 lista_tarefas.place(x=28,y=230)
 
 
-
+carrega_tarefas()
 janela.mainloop()
